@@ -32,6 +32,6 @@ Parameters:
 *   **votemin** - the minimum amount of votes for a drawing
 
 Example requests:
-*   Get all sea turtles with at least 5 votes: [/api/get\_ranking?category=sea turtle&votemin=5](/api/get_ranking?category=sea turtle&votemin=5)
+*   Get all sea turtles with at least 5 votes: [/api/get\_ranking?category=sea turtle&votemin=5](/api/get_ranking?category=sea%20turtle&votemin=5)
 *   Get 100 drawings with strokes: [/api/get\_ranking?limit=100&strokes=true](/api/get_ranking?limit=100&strokes=true)
 *   Skip the first 100 drawings and get 100 drawings: [/api/get\_ranking?offset=100&limit=100](/api/get_ranking?offset=100&limit=100)
