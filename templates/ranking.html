@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>QuickDrawBattle Ranking</title>
+        <link href="/static/style.css" rel="stylesheet">
+        <script src="/static/main.js"></script>
+        <script src="/static/ranking.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <main id="ranking">
+            <header>
+                <h1>✏ QuickDrawBattle ✏</h1>
+                <nav><a href=".">Battle</a><a class="selected">Ranking</a><a href="about">About</a><a href="https://github.com/ndri/quickdrawbattle">GitHub</a></nav>
+            </header>
+            <section id="filters">
+                <h2>Ranking</h2>
+                <label for="selectcategory">Category</label>
+                <select id="selectcategory">
+                    <option value="any" selected>any category</option>
+                    {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+                <label for="pagenumber">Page</label>
+                <input id="pagenumber" type="number" value="1" min="1">/<span id="maxpage">1</span>
+            </section>
+            <section id="tablecontainer">
+                <table id="rankingtable">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Drawing</th>
+                            <th>Category</th>
+                            <th>Country</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+            <div id="loadingicon">⏳</div>
+        </main>
+    </body>
+</html>

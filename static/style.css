@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #EEEEEE;
+    color: #333333;
+}
+
+main {
+    margin: auto;
+    width: 960px;
+}
+
+#tablecontainer {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#battle canvas {
+    cursor: pointer;
+}
+#battle canvas:hover {
+    background-color: #DDDDDD;
+}
+#battle {
+    width: 100%;
+}
+
+#content {
+    width: 512px;
+    margin: auto;
+}
+#content p {
+    text-align: justify;
+    line-height: 1.5rem;
+}
+#content li {
+    text-align: left;
+}
+
+canvas {
+    border: 1px solid #DDDDDD;
+    padding: 5%;
+    background-color: #FAFAFA;
+}
+
+table {
+    margin: auto;
+    width: 100%;
+    border-collapse: collapse;
+}
+table td, table th {
+    padding: 1rem;
+    border: 1px solid #DDDDDD;
+}
+table th {
+    background-color: #DDDDDD;
+}
+
+#filters {
+    margin: 1rem 0;
+}
+
+input[type="number"] {
+    width: 3rem;
+}
+
+nav {
+    overflow-x: auto;
+}
+nav a {
+    margin: 0 1rem;
+}
+a {
+    color: #03A9F4;
+    text-decoration: none;
+}
+a:hover {
+    color: #0288D1;
+}
+
+h2 {
+    font-weight: 400;
+}
+#category {
+    font-weight: 700;
+}
+
+#loadingicon {
+    animation: spin 0.7s infinite linear reverse;
+    font-size: 50px;
+    text-align: center;
+    width: 60px;
+    position: absolute;
+    margin-left: -30px;
+    margin-top: -30px;
+    left: 50%;
+    top: 50vh;
+    z-index: 42;
+}
+.hidden {
+    display: none;
+}
+.selected {
+    font-weight: 700;
+}
+
+@media screen and (max-width: 960px) {
+    main {
+        width: 100%;
+    }
+    #battle canvas {
+        width: 35%;
+    }
+}
+@media screen and (max-width: 640px) {
+    #battle canvas {
+        width: 35%;
+    }
+    #content {
+        width: 80%;
+        padding: 0 10%;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+    h2 {
+        font-size: 1rem;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}

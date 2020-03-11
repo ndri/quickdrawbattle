@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>QuickDrawBattle</title>
+        <link href="/static/style.css" rel="stylesheet">
+        <script src="/static/index.js"></script>
+        <script src="/static/main.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <main id="index">
+            <header>
+                <h1>✏ QuickDrawBattle ✏</h1>
+                <nav><a class="selected">Battle</a><a href="ranking">Ranking</a><a href="about">About</a><a href="https://github.com/ndri/quickdrawbattle">GitHub</a></nav>
+            </header>
+            <section id="battle">
+                <h2>Which is a better drawing of <span id="category"></span>?</h2>
+                <canvas id="drawing1"></canvas><canvas id="drawing2"></canvas>
+            </section>
+            <section id="filters">
+                <label for="selectcategory">Select a category</label>
+                <select id="selectcategory">
+                    <option value="any" selected>any category</option>
+                    {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </section>
+            <div id="loadingicon">⏳</div>
+        </main>
+    </body>
+</html>
