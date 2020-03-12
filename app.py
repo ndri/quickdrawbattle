@@ -67,7 +67,10 @@ def ranking():
 
 @app.route("/about")
 def about():
-    return render_template("about.html")
+    drawings = Drawing.query.count()
+    battles = Battle.query.filter(Battle.result != 0).count()
+
+    return render_template("about.html", drawings=drawings, battles=battles)
 
 
 def new_battle(category: str) -> dict:
