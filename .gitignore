@@ -1,3 +1,5 @@
 .idea/
 __pycache__
 app.cfg
+quickdraw_dataset_bin/
+venv/

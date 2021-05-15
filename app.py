@@ -2,19 +2,20 @@ import os
 import random
 import uuid
 import datetime
+import simplejson
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, case
 from quickdraw import QuickDrawData
 
-CACHE_DIR = "../quickdraw_dataset_bin"
+DATASET_DIR = "quickdraw_dataset_bin"
 
 app = Flask(__name__)
 app.config.from_pyfile("app.cfg")
 app.secret_key = os.urandom(32)
 
 db = SQLAlchemy(app)
-qd = QuickDrawData(cache_dir=CACHE_DIR, print_messages=False)
+qd = QuickDrawData(cache_dir=DATASET_DIR, print_messages=False)
 
 
 def uuid_gen() -> str:
@@ -142,13 +143,13 @@ def api_new_battle():
 @app.route("/api/vote")
 def api_vote():
     choice = request.args.get("choice", default="0", type=str)
-    uuid = request.args.get("battle", default="1337", type=str)
+    vote_uuid = request.args.get("battle", default="1337", type=str)
     category = request.args.get("category", default="any", type=str)
 
     if choice not in ("1", "2"):
         return jsonify(success=False, reason="Not a valid choice")
 
-    battle = Battle.query.filter_by(uuid=uuid).first()
+    battle = Battle.query.filter_by(uuid=vote_uuid).first()
     if not battle:
         return jsonify(success=False, reason="Not a valid battle")
 
@@ -224,7 +225,12 @@ def api_get_ranking():
         if strokes:
             drawing["strokes"] = json.loads(row.strokes)
         output["drawings"].append(drawing)
-    return jsonify(output)
+
+    # Use simplejson.dumps, because you can't serialize Decimal objects with json.dumps
+    return app.response_class(
+        f"{simplejson.dumps(output, indent=2, separators=(', ', ': '))}\n",
+        mimetype=app.config["JSONIFY_MIMETYPE"]
+    )
 
 
 if __name__ == "__main__":

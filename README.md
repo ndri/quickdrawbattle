@@ -35,3 +35,18 @@ Example requests:
 *   Get all sea turtles with at least 5 votes: [/api/get\_ranking?category=sea turtle&votemin=5](/api/get_ranking?category=sea%20turtle&votemin=5)
 *   Get 100 drawings with strokes: [/api/get\_ranking?limit=100&strokes=true](/api/get_ranking?limit=100&strokes=true)
 *   Skip the first 100 drawings and get 100 drawings: [/api/get\_ranking?offset=100&limit=100](/api/get_ranking?offset=100&limit=100)
+
+Usage
+-----
+
+1. Clone this repo.
+2. Set up postgresql and change the database uri in `app.cfg`.
+3. `mkdir quickdraw_dataset_bin`
+4. `gsutil -m cp "gs://quickdraw_dataset/full/binary/*.bin" quickdraw_dataset_bin` (warning, downloads 5+ GiB of quickdrawings)
+   - If you don't have `gsutil`, install it using `curl https://sdk.cloud.google.com | bash` or [read here](https://cloud.google.com/storage/docs/gsutil_install).
+   - If you have the dataset somewhere else, change the `DATASET_DIR` value in `app.py`.
+5. `python3 -m venv quickdrawbattleenv`
+6. `source quickdrawbattleenv/bin/activate`
+7. `pip3 install -r requirements.txt`
+8. `python3 dbinit.py`
+9. `python3 app.py`, serve with uwsgi and nginx ([guide](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-20-04)). 
