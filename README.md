@@ -1,6 +1,6 @@
 QuickDrawBattle
 ---------------
-Choose the better drawing to find out the best drawings in the QuickDraw dataset.
+Choose the better drawing to find out the best drawings in the QuickDraw dataset. It is running at https://andri.io/quickdrawbattle/.
 
 Made with:
 * Python 3.7
@@ -21,7 +21,7 @@ Since there are so many drawings, it would take a long time for even one drawing
 
 Results
 -------
-You can see the results on the [ranking page](ranking). To get usable data, you can **GET** them from [/api/get\_ranking](/api/get_ranking). You probably want to get the key\_ids from here and find the strokes from the [full dataset](https://console.cloud.google.com/storage/quickdraw_dataset/full/binary). You can also get the strokes from here if you enable the strokes parameter, but they are in lists of coordinate pairs instead of 2 lists of x and y.
+You can see the results on the [ranking page](https://andri.io/quickdrawbattle/ranking). To get usable data, you can **GET** them from [/api/get\_ranking](https://andri.io/quickdrawbattle/api/get_ranking). You probably want to get the key\_ids from here and find the strokes from the [full dataset](https://console.cloud.google.com/storage/quickdraw_dataset/full/binary). You can also get the strokes from here if you enable the strokes parameter, but they are in lists of coordinate pairs instead of 2 lists of x and y.
 
 Parameters:
 *   **category** - which [category](https://github.com/googlecreativelab/quickdraw-dataset/blob/master/categories.txt) the drawings will be from
@@ -32,9 +32,9 @@ Parameters:
 *   **votemin** - the minimum amount of votes for a drawing
 
 Example requests:
-*   Get all sea turtles with at least 5 votes: [/api/get\_ranking?category=sea turtle&votemin=5](/api/get_ranking?category=sea%20turtle&votemin=5)
-*   Get 100 drawings with strokes: [/api/get\_ranking?limit=100&strokes=true](/api/get_ranking?limit=100&strokes=true)
-*   Skip the first 100 drawings and get 100 drawings: [/api/get\_ranking?offset=100&limit=100](/api/get_ranking?offset=100&limit=100)
+*   Get all sea turtles with at least 5 votes: [/api/get\_ranking?category=sea turtle&votemin=5](https://andri.io/quickdrawbattle/api/get_ranking?category=sea%20turtle&votemin=5)
+*   Get 100 drawings with strokes: [/api/get\_ranking?limit=100&strokes=true](https://andri.io/quickdrawbattle/api/get_ranking?limit=100&strokes=true)
+*   Skip the first 100 drawings and get 100 drawings: [/api/get\_ranking?offset=100&limit=100](https://andri.io/quickdrawbattle/api/get_ranking?offset=100&limit=100)
 
 Usage
 -----
