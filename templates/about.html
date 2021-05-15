@@ -20,7 +20,7 @@
                 <p>You are given 2 random drawings of a random category and you choose which is better. The results are then sorted using <a href="https://www.evanmiller.org/how-not-to-sort-by-average-rating.html">a lower bound of Wilson score confidence interval for a Bernoulli parameter</a> and we can see the best ones!</p>
                 <p>Since there are so many drawings, it would take a long time for even one drawing to be voted on twice and we would probably never get results. For that reason, there is an 80% chance that you are given a drawing that has already been voted on. Otherwise at a 20% chance, you will be given a new drawing from the huge dataset.</p>
                 <h2>Results</h2>
-                <p>You can see the results on the <a href="ranking">ranking page</a>. To get usable data, you can <strong title=";)">GET</strong> them from <a href="/api/get_ranking">/api/get_ranking</a>. You probably want to get the key_ids from here and find the strokes from the <a href="https://console.cloud.google.com/storage/quickdraw_dataset/full/binary">full dataset</a>. You can also get the strokes from here if you enable the strokes parameter, but they are in lists of coordinate pairs instead of 2 lists of x and y.</p>
+                <p>You can see the results on the <a href="ranking">ranking page</a>. To get usable data, you can <strong title=";)">GET</strong> them from <a href="api/get_ranking">/api/get_ranking</a>. You probably want to get the key_ids from here and find the strokes from the <a href="https://console.cloud.google.com/storage/quickdraw_dataset/full/binary">full dataset</a>. You can also get the strokes from here if you enable the strokes parameter, but they are in lists of coordinate pairs instead of 2 lists of x and y.</p>
                 <p>Parameters:</p>
                 <ul>
                     <li><strong>category</strong> - which <a href="https://github.com/googlecreativelab/quickdraw-dataset/blob/master/categories.txt">category</a> the drawings will be from</li>
@@ -32,9 +32,9 @@
                 </ul>
                 <p>Example requests:</p>
                 <ul>
-                    <li>Get all sea turtles with at least 5 votes: <a href="/api/get_ranking?category=sea turtle&votemin=5">/api/get_ranking?category=sea turtle&votemin=5</a></li>
-                    <li>Get 100 drawings with strokes: <a href="/api/get_ranking?limit=100&strokes=true">/api/get_ranking?limit=100&strokes=true</a></li>
-                    <li>Skip the first 100 drawings and get 100 drawings: <a href="/api/get_ranking?offset=100&limit=100">/api/get_ranking?offset=100&limit=100</a></li>
+                    <li>Get all sea turtles with at least 5 votes: <a href="api/get_ranking?category=sea turtle&votemin=5">/api/get_ranking?category=sea turtle&votemin=5</a></li>
+                    <li>Get 100 drawings with strokes: <a href="api/get_ranking?limit=100&strokes=true">/api/get_ranking?limit=100&strokes=true</a></li>
+                    <li>Skip the first 100 drawings and get 100 drawings: <a href="api/get_ranking?offset=100&limit=100">/api/get_ranking?offset=100&limit=100</a></li>
                 </ul>
             </section>
         </main>
