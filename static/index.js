@@ -53,7 +53,7 @@ function vote() {
     };
 
     loadingicon.classList.remove("hidden");
-    request.open("GET", "/api/vote?" + encodeQueryData(queryData));
+    request.open("GET", "api/vote?" + encodeQueryData(queryData));
     request.send();
 }
 
@@ -77,7 +77,7 @@ function newBattle() {
     };
 
     loadingicon.classList.remove("hidden");
-    request.open("GET", "/api/new_battle?" + encodeQueryData(queryData));
+    request.open("GET", "api/new_battle?" + encodeQueryData(queryData));
     request.send();
 }
 

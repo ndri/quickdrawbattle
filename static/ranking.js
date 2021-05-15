@@ -54,7 +54,7 @@ function getRanking(tableID, category = "any", page = 1) {
     };
 
     loadingicon.classList.remove("hidden");
-    request.open("GET", "/api/get_ranking?" + encodeQueryData(queryData));
+    request.open("GET", "api/get_ranking?" + encodeQueryData(queryData));
     request.send();
 }
 
