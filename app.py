@@ -3,12 +3,14 @@ import datetime
 import os
 import random
 import uuid
+from dataclasses import dataclass
 
-import simplejson as json
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from quickdraw import QuickDrawData
 from sqlalchemy import func, cast, Float
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import load_only
 
 config = configparser.ConfigParser()
 config.read_file(open("config.ini"))
@@ -50,13 +52,23 @@ def calculate_score(ws, ls):  # wins, losses
     return score
 
 
+@dataclass
 class Drawing(db.Model):
+    key_id: str
+    category: str
+    countrycode: str
+    recognized: bool
+    strokes: list
+    wins: int
+    losses: int
+    score: float
+
     id = db.Column(db.Integer, primary_key=True)
     key_id = db.Column(db.String(16), nullable=False)
     category = db.Column(db.String)
     countrycode = db.Column(db.String)
     recognized = db.Column(db.Boolean)
-    strokes = db.Column(db.String)
+    strokes = db.Column(JSONB)
     wins = db.Column(db.Integer, default=0)
     losses = db.Column(db.Integer, default=0)
     votes = db.column_property(wins + losses)
@@ -92,6 +104,7 @@ def about():
     return render_template("about.html", drawings=drawings, battles=battles)
 
 
+# noinspection PyArgumentList
 def get_new_drawing(category: str) -> Drawing:
     # Get new drawing until we find one that's not in the database yet
     while True:
@@ -106,7 +119,7 @@ def get_new_drawing(category: str) -> Drawing:
         category=category,
         countrycode=qd_drawing.countrycode,
         recognized=qd_drawing.recognized,
-        strokes=json.dumps(qd_drawing.strokes, separators=(',', ':'))
+        strokes=qd_drawing.strokes
     )
     db.session.add(drawing)
     db.session.commit()
@@ -178,8 +191,8 @@ def prepare_battle(category: str) -> dict:
         "success": True,
         "id": new_battle.uuid,
         "category": category,
-        "strokes1": json.loads(Drawing.query.filter_by(key_id=new_battle.drawing1).first().strokes),  # Should join
-        "strokes2": json.loads(Drawing.query.filter_by(key_id=new_battle.drawing2).first().strokes)
+        "strokes1": Drawing.query.filter_by(key_id=new_battle.drawing1).first().strokes,  # Should join
+        "strokes2": Drawing.query.filter_by(key_id=new_battle.drawing2).first().strokes
     }
 
 
@@ -257,26 +270,15 @@ def api_get_ranking():
 
     drawings = query.all()
 
+    if not strokes:
+        for drawing in drawings:
+            del drawing.strokes
+
     output = {
         "count": count,
-        "drawings": []
+        "drawings": drawings
     }
-    # TODO: query select fields
-    for row in drawings:
-        drawing = {
-            "key_id": row.key_id,
-            "category": row.category,
-            "countrycode": row.countrycode,
-            "recognized": row.recognized,
-            "wins": row.wins,
-            "losses": row.losses,
-            "score": row.score
-        }
-        if strokes:
-            drawing["strokes"] = json.loads(row.strokes)
-        output["drawings"].append(drawing)
 
-    # Use simplejson.dumps, because you can't serialize Decimal objects with json.dumps
     return jsonify(output)
 
 
