@@ -43,8 +43,6 @@ function vote() {
     drawing1.classList.remove("ready");
     drawing2.classList.remove("ready");
     loadingicon.classList.remove("hidden");
-    votecounter.parentNode.classList.remove("hidden");
-    votecounter.innerHTML = Number(votecounter.innerHTML) + 1;
 
     fetch("api/vote", {
         method: "POST",
@@ -59,6 +57,8 @@ function vote() {
     ).then(data => {
         if (data.success) {
             loadingicon.classList.add("hidden");
+            votecounter.parentNode.classList.remove("hidden");
+            votecounter.innerHTML = Number(votecounter.innerHTML) + 1;
             drawBattle(data);
         } else {
             alert(data.reason);
