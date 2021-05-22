@@ -78,7 +78,8 @@ class Battle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String(32), default=uuid_gen)
     ip = db.Column(db.String, default="")
-    datetime = db.Column(db.DateTime, default=datetime.datetime.now)
+    created_on = db.Column(db.DateTime, default=datetime.datetime.now)
+    voted_on = db.Column(db.DateTime, default=None)
     category = db.Column(db.String)
     drawing1_id = db.Column(db.String(16), ForeignKey("drawing.key_id"))
     drawing2_id = db.Column(db.String(16), ForeignKey("drawing.key_id"))
@@ -230,6 +231,7 @@ def api_vote():
         battle.drawing2.wins += 1
 
     battle.result = int(choice)
+    battle.voted_on = datetime.datetime.now()
     db.session.commit()
 
     return jsonify(prepare_battle(category))
