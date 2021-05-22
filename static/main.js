@@ -1,4 +1,7 @@
-let timeout_count = 0;
+const json_headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json"
+}
 
 function alignCenter(strokes) {
     let maxX = 0;
@@ -21,7 +24,7 @@ function alignCenter(strokes) {
     }
 }
 
-function draw(canvasID, strokes, size = 1.0) {
+function draw(canvasID, strokes, size=1.0) {
     const canvas = document.getElementById(canvasID);
     canvas.width = 256 * size;
     canvas.height = 256 * size;
@@ -29,10 +32,11 @@ function draw(canvasID, strokes, size = 1.0) {
     ctx.lineWidth = 3 * size;
 
     const delay = 10;
-
     let count = 0;
 
     ctx.beginPath();
+
+    let timeout_count = 0;
 
     alignCenter(strokes);
     for (let stroke of strokes) {
@@ -48,6 +52,10 @@ function draw(canvasID, strokes, size = 1.0) {
                 ctx.lineTo(x * size, y * size);
                 ctx.stroke();
                 timeout_count--;
+
+                if (timeout_count === 0) {
+                    canvas.classList.add("ready");
+                }
             }, count++ * delay, point[0], point[1]);
             timeout_count++;
         }

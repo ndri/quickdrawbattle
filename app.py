@@ -200,17 +200,17 @@ def prepare_battle(category: str) -> dict:
     }
 
 
-@app.route("/api/new_battle")
+@app.route("/api/new_battle", methods=["POST"])
 def api_new_battle():
-    category = request.args.get("category", default="any", type=str)
+    category = request.json.get("category", "any")
     return jsonify(prepare_battle(category))
 
 
-@app.route("/api/vote")
+@app.route("/api/vote", methods=["POST"])
 def api_vote():
-    choice = request.args.get("choice", default="0", type=str)
-    vote_uuid = request.args.get("battle", default="1337", type=str)
-    category = request.args.get("category", default="any", type=str)
+    choice = request.json.get("choice", "0")
+    vote_uuid = request.json.get("battle", "1337")
+    category = request.json.get("category", "any")
 
     if choice not in ("1", "2"):
         return jsonify(success=False, reason="Not a valid choice")
@@ -220,7 +220,7 @@ def api_vote():
         return jsonify(success=False, reason="Not a valid battle")
 
     if battle.result in (1, 2):
-        return jsonify(success=False, reason="Already voted")
+        return jsonify(success=False, reason="This battle has already been voted on")
 
     if choice == "1":
         battle.drawing1.wins += 1

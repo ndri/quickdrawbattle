@@ -23,7 +23,7 @@ function encodeQueryData(data) {
    return ret.join("&");
 }
 
-function getRanking(tableID, category = "any", page = 1) {
+function getRanking(tableID, category="any", page=1) {
     if (page < 1) page = 1;
 
     const request = new XMLHttpRequest();
@@ -31,31 +31,25 @@ function getRanking(tableID, category = "any", page = 1) {
     let offset = (page - 1) * limit;
 
     const loadingicon = document.getElementById("loadingicon");
+    loadingicon.classList.remove("hidden");
 
-    request.onreadystatechange = () => {
-        if (request.readyState === 4) {
-            if (request.status === 200) {
-                const data = JSON.parse(request.responseText);
-                let maxPage = Math.ceil(data["count"] / limit);
-                document.getElementById("pagenumber").max = maxPage;
-                document.getElementById("maxpage").innerHTML = maxPage;
-                fillTable(tableID, data["drawings"], offset);
-                loadingicon.classList.add("hidden");
-            }
-        }
-    };
-
-    let queryData = {
+    fetch("api/get_ranking?" + new URLSearchParams({
         "category": category,
         "offset": offset,
         "limit": limit,
         "strokes": true,
         "votemin": 0
-    };
-
-    loadingicon.classList.remove("hidden");
-    request.open("GET", "api/get_ranking?" + encodeQueryData(queryData));
-    request.send();
+    })).then(
+        reponse => reponse.json()
+    ).then(
+        data => {
+            let maxPage = Math.ceil(data["count"] / limit);
+            document.getElementById("pagenumber").max = maxPage;
+            document.getElementById("maxpage").innerHTML = maxPage;
+            fillTable(tableID, data["drawings"], offset);
+            loadingicon.classList.add("hidden");
+        }
+    )
 }
 
 function fillTable(tableID, drawings, offset) {

@@ -1,6 +1,10 @@
+let drawing1, drawing2;
+
 window.onload = () => {
-    document.getElementById("drawing1").onclick = vote;
-    document.getElementById("drawing2").onclick = vote;
+    drawing1 = document.getElementById("drawing1")
+    drawing1.onclick = vote;
+    drawing2 = document.getElementById("drawing2")
+    drawing2.onclick = vote;
     draw("drawing1", []);
     draw("drawing2", []);
 
@@ -13,29 +17,13 @@ function updateCategory(category) {
 }
 
 function vote() {
-    if (timeout_count > 0) {
+    if (!drawing1.classList.contains("ready") || !drawing2.classList.contains("ready")) {
         return;
     }
 
-    const request = new XMLHttpRequest();
     const uuid = this.parentNode.getAttribute("data-battle");
     const category = document.getElementById("selectcategory").value;
-
     const loadingicon = document.getElementById("loadingicon");
-
-    request.onreadystatechange = () => {
-        if (request.readyState === 4) {
-            if (request.status === 200) {
-                const data = JSON.parse(request.responseText);
-                if (data.success) {
-                    loadingicon.classList.add("hidden");
-                    drawBattle(data);
-                } else {
-                    alert(data.reason);
-                }
-            }
-        }
-    };
 
     let choice;
     if (this.id === "drawing1") {
@@ -46,39 +34,47 @@ function vote() {
         choice = "0";
     }
 
-    let queryData = {
-        "battle": uuid,
-        "choice": choice,
-        "category": category
-    };
-
+    drawing1.classList.remove("ready");
+    drawing2.classList.remove("ready");
     loadingicon.classList.remove("hidden");
-    request.open("GET", "api/vote?" + encodeQueryData(queryData));
-    request.send();
+
+    fetch("api/vote", {
+        method: "POST",
+        headers: json_headers,
+        body: JSON.stringify({
+            battle: uuid,
+            choice: choice,
+            category: category
+        })
+    }).then(
+        response => response.json()
+    ).then(data => {
+        if (data.success) {
+            loadingicon.classList.add("hidden");
+            drawBattle(data);
+        } else {
+            alert(data.reason);
+        }
+    })
 }
 
-function newBattle() {
+async function newBattle() {
     const category = document.getElementById("selectcategory").value;
-    const request = new XMLHttpRequest();
     const loadingicon = document.getElementById("loadingicon");
 
-    request.onreadystatechange = () => {
-        if (request.readyState === 4) {
-            if (request.status === 200) {
-                const data = JSON.parse(request.responseText);
-                loadingicon.classList.add("hidden");
-                drawBattle(data);
-            }
-        }
-    };
-
-    let queryData = {
-        "category": category
-    };
-
     loadingicon.classList.remove("hidden");
-    request.open("GET", "api/new_battle?" + encodeQueryData(queryData));
-    request.send();
+    fetch("api/new_battle", {
+        method: "POST",
+        headers: json_headers,
+        body: JSON.stringify({
+            category: category
+        })
+    }).then(
+        response => response.json()
+    ).then(data => {
+        loadingicon.classList.add("hidden");
+        drawBattle(data);
+    });
 }
 
 function drawBattle(battle) {

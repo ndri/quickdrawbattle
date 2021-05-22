@@ -16,10 +16,10 @@ main {
     overflow-x: auto;
 }
 
-#battle canvas {
+#battle canvas.ready {
     cursor: pointer;
 }
-#battle canvas:hover {
+#battle canvas.ready:hover {
     background-color: #DDDDDD;
 }
 #battle {
