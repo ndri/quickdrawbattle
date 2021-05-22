@@ -30,11 +30,14 @@ function draw(canvasID, strokes, size=1.0) {
     canvas.height = 256 * size;
     const ctx = canvas.getContext("2d");
     ctx.lineWidth = 3 * size;
-
-
     ctx.beginPath();
 
-    const drawing_time = 500;
+    alignCenter(strokes);
+    for (let i = 0; i < 3; i++) {
+        strokes = addIntermediatePoints(strokes);
+    }
+
+    const drawing_time = 750;
     let count = 0;
     let total_lines = 0;
     for (let stroke of strokes) {
@@ -45,7 +48,6 @@ function draw(canvasID, strokes, size=1.0) {
     let delay = drawing_time / total_lines;
     let lines_left = total_lines;
 
-    alignCenter(strokes);
     for (let stroke of strokes) {
         let firstPoint = stroke.shift();
         setTimeout((x, y) => {
@@ -64,6 +66,23 @@ function draw(canvasID, strokes, size=1.0) {
                 }
             }, count++ * delay, point[0], point[1]);
         }
-        console.log(count + ", " + total_lines + ", " + lines_left);
     }
+}
+
+function addIntermediatePoints(strokes) {
+    let new_strokes = [];
+
+    for (let stroke of strokes) {
+        new_strokes.push([]);
+        new_strokes[new_strokes.length - 1].push(stroke[0])
+
+        for (let i = 1; i < stroke.length; i++) {
+            let start = stroke[i - 1];
+            let end = stroke[i];
+            let middle = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
+            new_strokes[new_strokes.length - 1].push(middle, end)
+        }
+    }
+
+    return new_strokes;
 }

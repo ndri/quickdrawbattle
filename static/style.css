@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: sans-serif;
+    font-family: Arial, Helvetica, sans-serif;;
     text-align: center;
     background-color: #EEEEEE;
     color: #333333;
@@ -36,6 +36,9 @@ main {
 }
 #skipbutton:hover {
     background-color: #DDDDDD;
+}
+input, button, select {
+    font-family: Arial, Helvetica, sans-serif;;
 }
 
 #content {
