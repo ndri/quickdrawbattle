@@ -15,9 +15,11 @@ Google collected over 50 million drawings with the game [Quick, Draw!](https://q
 
 How does it work?
 -----------------
-You are given 2 random drawings of a random category and you choose which is better. The results are then sorted using [a lower bound of Wilson score confidence interval for a Bernoulli parameter](https://www.evanmiller.org/how-not-to-sort-by-average-rating.html) and we can see the best ones!
+You are given 2 random drawings of a random category and you choose which is better. The drawings are then sorted based on the votes and we can see the best ones!
 
-Since there are so many drawings, it would take a long time for even one drawing to be voted on twice and we would probably never get results. For that reason, there is an 80% chance that you are given a drawing that has already been voted on. Otherwise at a 20% chance, you will be given a new drawing from the huge dataset.
+Since there are so many drawings, it would take a long time for even one drawing to be voted on twice and we would probably never get usable results. For that reason, there are a maximum of 25 drawings up for battle per category. They will be replaced once they have been voted on 20 times. Some categories have more than 25 drawings right now, because there used to be no limit.
+
+The score is calculated using [a lower bound of Wilson score confidence interval for a Bernoulli parameter](https://www.evanmiller.org/how-not-to-sort-by-average-rating.html). During score calculation, every drawing gets one invisible win, so the score of drawings with no wins is not 0 and they can be compared. The scores are also normalized to a range from 0 to 1. [Table of all possible scores](https://andri.io/quickdrawbattle/static/scoring.png). 
 
 Results
 -------
@@ -44,7 +46,7 @@ Usage
 3. `mkdir quickdraw_dataset_bin`
 4. `gsutil -m cp "gs://quickdraw_dataset/full/binary/*.bin" quickdraw_dataset_bin` (warning, downloads 5+ GiB of quickdrawings)
    - If you don't have `gsutil`, install it using `curl https://sdk.cloud.google.com | bash` or [read here](https://cloud.google.com/storage/docs/gsutil_install).
-   - If you have the dataset somewhere else, change the `DATASET_DIR` value in `app.py`.
+   - If you have the dataset somewhere else, change the `dataset_dir` value in `config.ini`.
 5. `python3 -m venv quickdrawbattleenv`
 6. `source quickdrawbattleenv/bin/activate`
 7. `pip3 install -r requirements.txt`

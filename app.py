@@ -1,16 +1,18 @@
 import configparser
+import datetime
 import os
 import random
 import uuid
-import datetime
-import simplejson
-from flask import *
+
+import simplejson as json
+from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func, case
 from quickdraw import QuickDrawData
+from sqlalchemy import func, cast, Float
 
 config = configparser.ConfigParser()
 config.read_file(open("config.ini"))
+z = config["general"].getfloat("confidence_z")  # 1.96 => 0.975 confidence
 
 app = Flask(__name__)
 app.config.from_pyfile("app.cfg")
@@ -25,14 +27,27 @@ def uuid_gen() -> str:
 
 
 # https://www.evanmiller.org/how-not-to-sort-by-average-rating.html
-# TODO: normalize to 0-1
 def ci_lower_bound(pos, neg):
     n = pos + neg
-    z = config["general"].getfloat("confidence_z")  # 1.96 => 0.975 confidence
-    return case(
-        [(n == 0, 0)],
-        else_=((pos + z**2/2) / n - z * func.sqrt((pos * neg) / n + z**2/4) / n) / (1 + z**2 / n)
-    )
+    if n == 0:
+        return 0
+    return ((pos + z ** 2 / 2) / n - z * ((pos * neg) / n + z ** 2 / 4) ** 0.5 / n) / (1 + z ** 2 / n)
+
+
+# These are used to normalize the score to a range from 0 to 1
+score_min = ci_lower_bound(1, config["general"].getint("vote_limit"))
+score_max = ci_lower_bound(config["general"].getint("vote_limit") + 1, 0)
+
+
+def calculate_score(ws, ls):  # wins, losses
+    ws += 1  # Add hidden win, so drawings with 0 losses get a score bigger than 0
+    n = cast(ws + ls, Float)  # Integer division in Postgres returns an integer
+    score = ((ws + z ** 2 / 2) / n - z * func.sqrt((ws * ls) / n + z ** 2 / 4) / n) / (1 + z ** 2 / n)
+
+    # Normalize score to a range from 0 to 1
+    score = (score - score_min) / (score_max - score_min)
+
+    return score
 
 
 class Drawing(db.Model):
@@ -45,7 +60,7 @@ class Drawing(db.Model):
     wins = db.Column(db.Integer, default=0)
     losses = db.Column(db.Integer, default=0)
     votes = db.column_property(wins + losses)
-    score = db.column_property(ci_lower_bound(wins, losses))
+    score = db.column_property(calculate_score(wins, losses))
 
 
 class Battle(db.Model):
@@ -246,6 +261,7 @@ def api_get_ranking():
         "count": count,
         "drawings": []
     }
+    # TODO: query select fields
     for row in drawings:
         drawing = {
             "key_id": row.key_id,
@@ -261,10 +277,7 @@ def api_get_ranking():
         output["drawings"].append(drawing)
 
     # Use simplejson.dumps, because you can't serialize Decimal objects with json.dumps
-    return app.response_class(
-        f"{simplejson.dumps(output, separators=(',', ':'))}\n",
-        mimetype=app.config["JSONIFY_MIMETYPE"]
-    )
+    return jsonify(output)
 
 
 if __name__ == "__main__":
