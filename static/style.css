@@ -28,8 +28,14 @@ main {
 #skipbutton {
     width: 512px;
     cursor: pointer;
-    padding: 5%;
-    font-size: 1.4rem;
+    padding: 5% 10%;
+    font-size: 1.3rem;
+    box-sizing: content-box;
+    border: 1px solid #DDDDDD;
+    background-color: #FAFAFA;
+}
+#skipbutton:hover {
+    background-color: #DDDDDD;
 }
 
 #content {
@@ -119,22 +125,25 @@ h2 {
         width: 35%;
     }
     #skipbutton {
-        width: 90%;
+        width: 70%;
     }
 }
 @media screen and (max-width: 640px) {
     #content {
-        width: 80%;
-        padding: 0 10%;
+        width: 90%;
+        padding: 0 5%;
     }
     h1 {
         font-size: 1.5rem;
     }
     h2 {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
     #battle canvas.ready:hover {
         background-color: #FAFAFA;
+    }
+    #skipbutton {
+        font-size: 1rem;
     }
 }
 
