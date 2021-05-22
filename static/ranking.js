@@ -1,9 +1,10 @@
 window.onload = () => {
     const selectcategory = document.getElementById("selectcategory");
     const pagenumber = document.getElementById("pagenumber");
+    const voteminimum = document.getElementById("voteminimum");
 
     function updateTable() {
-        getRanking("rankingtable", selectcategory.value, pagenumber.value);
+        getRanking("rankingtable", selectcategory.value, pagenumber.value, voteminimum.value);
     }
 
     updateTable();
@@ -12,9 +13,13 @@ window.onload = () => {
         pagenumber.value = 1;
         updateTable();
     };
+    voteminimum.onchange = () => {
+        pagenumber.value = 1;
+        updateTable();
+    }
 };
 
-function getRanking(tableID, category="any", page=1) {
+function getRanking(tableID, category="any", page=1, votemin=0) {
     if (page < 1) page = 1;
 
     const request = new XMLHttpRequest();
@@ -29,7 +34,7 @@ function getRanking(tableID, category="any", page=1) {
         "offset": offset,
         "limit": limit,
         "strokes": true,
-        "votemin": 0
+        "votemin": votemin
     })).then(
         reponse => reponse.json()
     ).then(

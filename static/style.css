@@ -56,6 +56,9 @@ canvas {
     background-color: #FAFAFA;
 }
 
+label:not(:first-child) {
+    margin-left: 0.5rem;
+}
 table {
     margin: auto;
     width: 100%;
@@ -144,6 +147,10 @@ h2 {
     }
     #skipbutton {
         font-size: 1rem;
+    }
+    label {
+        display: block;
+        margin: 1rem 0 0.2rem;
     }
 }
 

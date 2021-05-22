@@ -23,6 +23,8 @@
                     <option value="{{ category }}">{{ category }}</option>
                     {% endfor %}
                 </select>
+                <label for="voteminimum">Vote minimum</label>
+                <input id="voteminimum" type="number" value="0" min="0" max="20">
                 <label for="pagenumber">Page</label>
                 <input id="pagenumber" type="number" value="1" min="1">/<span id="maxpage">1</span>
             </section>
