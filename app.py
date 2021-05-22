@@ -10,7 +10,6 @@ from flask_sqlalchemy import SQLAlchemy
 from quickdraw import QuickDrawData
 from sqlalchemy import func, cast, Float, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import load_only
 
 config = configparser.ConfigParser()
 config.read_file(open("config.ini"))
@@ -100,10 +99,13 @@ def ranking():
 
 @app.route("/about")
 def about():
-    drawings = Drawing.query.count()
-    battles = Battle.query.filter(Battle.result != 0).count()
+    params = {
+        "drawings": Drawing.query.count(),
+        "battles": Battle.query.filter(Battle.result != 0).count(),
+        "finished_drawings": Drawing.query.filter(Drawing.votes == config["general"]["vote_limit"]).count()
+    }
 
-    return render_template("about.html", drawings=drawings, battles=battles)
+    return render_template("about.html", **params)
 
 
 # noinspection PyArgumentList
