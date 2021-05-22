@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from quickdraw import QuickDrawData
-from sqlalchemy import func, cast, Float
+from sqlalchemy import func, cast, Float, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import load_only
 
@@ -81,8 +81,10 @@ class Battle(db.Model):
     ip = db.Column(db.String, default="")
     datetime = db.Column(db.DateTime, default=datetime.datetime.now)
     category = db.Column(db.String)
-    drawing1 = db.Column(db.String(16))
-    drawing2 = db.Column(db.String(16))
+    drawing1_id = db.Column(db.String(16), ForeignKey("drawing.key_id"))
+    drawing2_id = db.Column(db.String(16), ForeignKey("drawing.key_id"))
+    drawing1 = db.relationship("Drawing", foreign_keys=[drawing1_id])
+    drawing2 = db.relationship("Drawing", foreign_keys=[drawing2_id])
     result = db.Column(db.Integer, default=-1)  # -1 = not shown yet, 0 = shown but not voted, 1 and 2 are winners
 
 
@@ -158,8 +160,8 @@ def get_new_battle(category: str) -> Battle:
     battle = Battle(
         ip=request.remote_addr,
         category=category,
-        drawing1=battle_drawings[0].key_id,
-        drawing2=battle_drawings[1].key_id
+        drawing1_id=battle_drawings[0].key_id,
+        drawing2_id=battle_drawings[1].key_id
     )
     db.session.add(battle)
     db.session.commit()
@@ -191,8 +193,8 @@ def prepare_battle(category: str) -> dict:
         "success": True,
         "id": new_battle.uuid,
         "category": category,
-        "strokes1": Drawing.query.filter_by(key_id=new_battle.drawing1).first().strokes,  # Should join
-        "strokes2": Drawing.query.filter_by(key_id=new_battle.drawing2).first().strokes
+        "strokes1": new_battle.drawing1.strokes,
+        "strokes2": new_battle.drawing2.strokes
     }
 
 
@@ -218,15 +220,12 @@ def api_vote():
     if battle.result in (1, 2):
         return jsonify(success=False, reason="Already voted")
 
-    drawing1 = Drawing.query.filter_by(key_id=battle.drawing1).first()
-    drawing2 = Drawing.query.filter_by(key_id=battle.drawing2).first()
-
     if choice == "1":
-        drawing1.wins += 1
-        drawing2.losses += 1
+        battle.drawing1.wins += 1
+        battle.drawing2.losses += 1
     else:
-        drawing1.losses += 1
-        drawing2.wins += 1
+        battle.drawing1.losses += 1
+        battle.drawing2.wins += 1
 
     battle.result = int(choice)
     db.session.commit()
