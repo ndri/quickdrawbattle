@@ -98,8 +98,8 @@ function drawBattle(battle) {
     drawing1.onclick = vote;
     drawing2.onclick = vote;
 
-    draw("drawing1", battle.strokes1, 1);
-    draw("drawing2", battle.strokes2, 1);
+    draw("drawing1", smooth(battle.strokes1, 3), 1);
+    draw("drawing2", smooth(battle.strokes2, 3), 1);
     battleElement.setAttribute("data-battle", battle.id);
     updateCategory(battle.category);
 }

@@ -33,9 +33,6 @@ function draw(canvasID, strokes, size=1.0) {
     ctx.beginPath();
 
     alignCenter(strokes);
-    for (let i = 0; i < 3; i++) {
-        strokes = addIntermediatePoints(strokes);
-    }
 
     const drawing_time = 750;
     let count = 0;
@@ -69,20 +66,25 @@ function draw(canvasID, strokes, size=1.0) {
     }
 }
 
-function addIntermediatePoints(strokes) {
-    let new_strokes = [];
+function smooth(strokes, passes=1) {
+    let new_strokes;
 
-    for (let stroke of strokes) {
-        new_strokes.push([]);
-        new_strokes[new_strokes.length - 1].push(stroke[0])
+    for (let pass = 0; pass < passes; pass++) {
+        new_strokes = [];
 
-        for (let i = 1; i < stroke.length; i++) {
-            let start = stroke[i - 1];
-            let end = stroke[i];
-            let middle = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
-            new_strokes[new_strokes.length - 1].push(middle, end)
+        for (let stroke of strokes) {
+            new_strokes.push([]);
+            new_strokes[new_strokes.length - 1].push(stroke[0])
+
+            for (let i = 1; i < stroke.length; i++) {
+                let start = stroke[i - 1];
+                let end = stroke[i];
+                let middle = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
+                new_strokes[new_strokes.length - 1].push(middle, end)
+            }
         }
+        strokes = new_strokes;
     }
 
-    return new_strokes;
+    return strokes;
 }
