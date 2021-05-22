@@ -59,6 +59,9 @@ function vote() {
             loadingicon.classList.add("hidden");
             votecounter.parentNode.classList.remove("hidden");
             votecounter.innerHTML = Number(votecounter.innerHTML) + 1;
+            if (votecounter.innerHTML === "2") {
+                votecounter.nextSibling.nextSibling.innerHTML = "times";
+            }
             drawBattle(data);
         } else {
             alert(data.reason);
