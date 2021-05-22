@@ -31,10 +31,18 @@ function draw(canvasID, strokes, size=1.0) {
     const ctx = canvas.getContext("2d");
     ctx.lineWidth = 3 * size;
 
-    const delay = 10;
     let count = 0;
 
     ctx.beginPath();
+
+    const drawing_time = 500;
+    let total_lines = 0;
+    for (let stroke of strokes) {
+        for (let point of stroke) {
+            total_lines++;
+        }
+    }
+    let delay = drawing_time / total_lines;
 
     let timeout_count = 0;
 
