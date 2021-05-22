@@ -25,6 +25,12 @@ main {
 #battle {
     width: 100%;
 }
+#skipbutton {
+    width: 512px;
+    cursor: pointer;
+    padding: 5%;
+    font-size: 1.4rem;
+}
 
 #content {
     width: 512px;
@@ -112,11 +118,11 @@ h2 {
     #battle canvas {
         width: 35%;
     }
+    #skipbutton {
+        width: 90%;
+    }
 }
 @media screen and (max-width: 640px) {
-    #battle canvas {
-        width: 35%;
-    }
     #content {
         width: 80%;
         padding: 0 10%;

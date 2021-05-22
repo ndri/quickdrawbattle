@@ -43,32 +43,27 @@ function draw(canvasID, strokes, size=1.0) {
         }
     }
     let delay = drawing_time / total_lines;
+    let lines_left = total_lines;
 
     alignCenter(strokes);
     for (let stroke of strokes) {
         let firstPoint = stroke.shift();
         setTimeout((x, y) => {
             ctx.moveTo(x * size, y * size);
+            lines_left--;
         }, count++ * delay, firstPoint[0], firstPoint[1]);
 
         for (let point of stroke) {
             setTimeout((x, y) => {
                 ctx.lineTo(x * size, y * size);
                 ctx.stroke();
+                lines_left--;
 
-                if (count === total_lines) {
+                if (lines_left === 0) {
                     canvas.classList.add("ready");
                 }
             }, count++ * delay, point[0], point[1]);
         }
+        console.log(count + ", " + total_lines + ", " + lines_left);
     }
-}
-
-// https://stackoverflow.com/a/111545/12123296
-function encodeQueryData(data) {
-   const ret = [];
-   for (let d in data) {
-       ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
-   }
-   return ret.join("&");
 }

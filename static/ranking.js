@@ -14,15 +14,6 @@ window.onload = () => {
     };
 };
 
-// https://stackoverflow.com/a/111545/12123296
-function encodeQueryData(data) {
-   const ret = [];
-   for (let d in data) {
-       ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
-   }
-   return ret.join("&");
-}
-
 function getRanking(tableID, category="any", page=1) {
     if (page < 1) page = 1;
 

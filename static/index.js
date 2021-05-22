@@ -8,6 +8,8 @@ window.onload = () => {
     draw("drawing1", []);
     draw("drawing2", []);
 
+    document.getElementById("skipbutton").onclick = newBattle;
+
     newBattle();
 };
 
@@ -59,8 +61,14 @@ function vote() {
 }
 
 async function newBattle() {
+    if (!drawing1.classList.contains("ready") || !drawing2.classList.contains("ready")) {
+        return;
+    }
+
     const category = document.getElementById("selectcategory").value;
     const loadingicon = document.getElementById("loadingicon");
+    drawing1.classList.remove("ready");
+    drawing2.classList.remove("ready");
 
     loadingicon.classList.remove("hidden");
     fetch("api/new_battle", {
