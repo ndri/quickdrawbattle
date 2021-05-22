@@ -127,6 +127,9 @@ h2 {
     h2 {
         font-size: 1rem;
     }
+    #battle canvas.ready:hover {
+        background-color: #FAFAFA;
+    }
 }
 
 @keyframes spin {

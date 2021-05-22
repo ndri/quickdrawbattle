@@ -79,6 +79,17 @@ async function newBattle() {
 
 function drawBattle(battle) {
     const battleElement = document.getElementById("battle");
+
+    // replace drawings so mobile hover goes away
+    const drawing1_clone = drawing1.cloneNode(true);
+    const drawing2_clone = drawing2.cloneNode(true);
+    drawing1.replaceWith(drawing1_clone);
+    drawing2.replaceWith(drawing2_clone);
+    drawing1 = drawing1_clone;
+    drawing2 = drawing2_clone;
+    drawing1.onclick = vote;
+    drawing2.onclick = vote;
+
     draw("drawing1", battle.strokes1, 1);
     draw("drawing2", battle.strokes2, 1);
     battleElement.setAttribute("data-battle", battle.id);
