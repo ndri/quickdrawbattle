@@ -1,6 +1,11 @@
 let drawing1, drawing2;
+let votecounter;
+let loadingicon;
 
 window.onload = () => {
+    loadingicon = document.getElementById("loadingicon");
+    votecounter = document.getElementById("votecounter");
+
     drawing1 = document.getElementById("drawing1")
     drawing1.onclick = vote;
     drawing2 = document.getElementById("drawing2")
@@ -25,7 +30,6 @@ function vote() {
 
     const uuid = this.parentNode.getAttribute("data-battle");
     const category = document.getElementById("selectcategory").value;
-    const loadingicon = document.getElementById("loadingicon");
 
     let choice;
     if (this.id === "drawing1") {
@@ -39,6 +43,8 @@ function vote() {
     drawing1.classList.remove("ready");
     drawing2.classList.remove("ready");
     loadingicon.classList.remove("hidden");
+    votecounter.parentNode.classList.remove("hidden");
+    votecounter.innerHTML = Number(votecounter.innerHTML) + 1;
 
     fetch("api/vote", {
         method: "POST",
@@ -60,7 +66,7 @@ function vote() {
     })
 }
 
-async function newBattle() {
+function newBattle() {
     if (!drawing1.classList.contains("ready") || !drawing2.classList.contains("ready")) {
         return;
     }
