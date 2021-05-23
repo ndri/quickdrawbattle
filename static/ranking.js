@@ -67,6 +67,7 @@ function fillTable(tableID, drawings, offset) {
 
         tr.insertCell().innerText = drawing.category;
         tr.insertCell().innerText = drawing.countrycode;
+        tr.insertCell().innerText = drawing.recognized;
         tr.insertCell().innerText = drawing.wins;
         tr.insertCell().innerText = drawing.losses;
         tr.insertCell().innerText = (drawing.score).toFixed(4);
